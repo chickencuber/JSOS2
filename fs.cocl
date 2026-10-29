@@ -1,0 +1,15 @@
+include ./root/ /
+include ./headers/ /headers/
+
+mod /bin/**f root root 755
+mod /lib/**f root root 755
+
+mkdir /dev/
+mod /bin/**f root root 555
+
+mkdir /usr/
+mkdir /usr/lib/
+mkdir /usr/bin/
+
+touch hostname JSOS
+

@@ -1,0 +1,9 @@
+{
+    "type": "module",
+    "dependencies": {
+        "@chickencuber/cocl": "^0.1.0"
+    },
+    "devDependencies": {
+        "@types/node": "^26.1.2"
+    }
+}

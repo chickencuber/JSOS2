@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "esModuleInterop": true,
+        "checkJs": false,
+        "typeRoots": ["./types", "./node_modules/@types"],
+        "skipLibCheck": true
+    },
+  "include": ["js_kernel/**/*.js", "types/**/*.d.ts"]
+}

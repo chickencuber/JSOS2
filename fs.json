@@ -1,0 +1,131 @@
+{
+    "type": "dir",
+    "mode": 493,
+    "owner": "root",
+    "group": "root",
+    "children": {
+        "bin": {
+            "type": "dir",
+            "mode": 493,
+            "owner": "root",
+            "group": "root",
+            "children": {
+                "main": {
+                    "type": "file",
+                    "mode": 365,
+                    "owner": "root",
+                    "group": "root",
+                    "include": "root/bin/main"
+                }
+            }
+        },
+        "lib": {
+            "type": "dir",
+            "mode": 493,
+            "owner": "root",
+            "group": "root",
+            "children": {
+                "libc.so": {
+                    "type": "file",
+                    "mode": 493,
+                    "owner": "root",
+                    "group": "root",
+                    "include": "root/lib/libc.so"
+                }
+            }
+        },
+        "headers": {
+            "type": "dir",
+            "mode": 493,
+            "owner": "root",
+            "group": "root",
+            "children": {
+                "import.h": {
+                    "type": "file",
+                    "mode": 420,
+                    "owner": "root",
+                    "group": "root",
+                    "include": "headers/import.h"
+                },
+                "stdarg.h": {
+                    "type": "file",
+                    "mode": 420,
+                    "owner": "root",
+                    "group": "root",
+                    "include": "headers/stdarg.h"
+                },
+                "stdint.h": {
+                    "type": "file",
+                    "mode": 420,
+                    "owner": "root",
+                    "group": "root",
+                    "include": "headers/stdint.h"
+                },
+                "stdio.h": {
+                    "type": "file",
+                    "mode": 420,
+                    "owner": "root",
+                    "group": "root",
+                    "include": "headers/stdio.h"
+                },
+                "stdkb.h": {
+                    "type": "file",
+                    "mode": 420,
+                    "owner": "root",
+                    "group": "root",
+                    "include": "headers/stdkb.h"
+                },
+                "stdstr.h": {
+                    "type": "file",
+                    "mode": 420,
+                    "owner": "root",
+                    "group": "root",
+                    "include": "headers/stdstr.h"
+                },
+                "stdutil.h": {
+                    "type": "file",
+                    "mode": 420,
+                    "owner": "root",
+                    "group": "root",
+                    "include": "headers/stdutil.h"
+                }
+            }
+        },
+        "dev": {
+            "type": "dir",
+            "mode": 493,
+            "owner": "root",
+            "group": "root",
+            "children": {}
+        },
+        "usr": {
+            "type": "dir",
+            "mode": 493,
+            "owner": "root",
+            "group": "root",
+            "children": {
+                "lib": {
+                    "type": "dir",
+                    "mode": 493,
+                    "owner": "root",
+                    "group": "root",
+                    "children": {}
+                },
+                "bin": {
+                    "type": "dir",
+                    "mode": 493,
+                    "owner": "root",
+                    "group": "root",
+                    "children": {}
+                }
+            }
+        },
+        "hostname": {
+            "type": "file",
+            "mode": 420,
+            "owner": "root",
+            "group": "root",
+            "content": "JSOS"
+        }
+    }
+}
