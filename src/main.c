@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdkb.h>
 #include <stdstr.h>
-#include <stdutil.h>
+#include <stdlib.h>
 
 int main() {
     int fd = open("/dev/kb");

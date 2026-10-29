@@ -75,19 +75,19 @@
                     "group": "root",
                     "include": "headers/stdkb.h"
                 },
+                "stdlib.h": {
+                    "type": "file",
+                    "mode": 420,
+                    "owner": "root",
+                    "group": "root",
+                    "include": "headers/stdlib.h"
+                },
                 "stdstr.h": {
                     "type": "file",
                     "mode": 420,
                     "owner": "root",
                     "group": "root",
                     "include": "headers/stdstr.h"
-                },
-                "stdutil.h": {
-                    "type": "file",
-                    "mode": 420,
-                    "owner": "root",
-                    "group": "root",
-                    "include": "headers/stdutil.h"
                 }
             }
         },
