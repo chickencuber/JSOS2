@@ -5,7 +5,6 @@ cflags = --target=wasm32 $
 		  -ffreestanding $
 		  -nostdlib $
 		  -nostdinc $
-		  -MMD -MP $
           -matomics $
           -mbulk-memory
 
@@ -21,9 +20,15 @@ ldflags = --target=wasm32 $
 rule mkdir
     command = mkdir -p $out
 
+
+rule npm_install
+    command = npm install
+    generator = 1
+    restat = 1
+
 rule cc
     depfile = $out.d
-    command = $cc $cflags -c $in -o $out
+    command = $cc -MD -MF $out.d $cflags -c $in -o $out
 
 rule genfs
     command = ./generate.js $in $out
@@ -40,20 +45,22 @@ build build/: mkdir
 build root/lib/: mkdir
 build root/bin/: mkdir
 
-build fs.json: genfs fs.cocl | FORCE
+build fs.json: genfs fs.cocl | FORCE | node_modules/.package-lock.json
 
-build build/stdio.o: cc src/libc/stdio.c | build/
-build build/stdstr.o: cc src/libc/stdstr.c | build/ 
-build build/stdkb.o: cc src/libc/stdkb.c | build/
-build build/main.o: cc src/main.c | build/
+build build/stdio.o: cc src/libc/stdio.c || build/
+build build/stdstr.o: cc src/libc/stdstr.c || build/ 
+build build/stdkb.o: cc src/libc/stdkb.c || build/
+build build/main.o: cc src/main.c || build/
 
 
-build root/lib/libc.so: link build/stdio.o build/stdstr.o build/stdkb.o | root/lib/
-build root/bin/main: link build/main.o | root/bin/
+build root/lib/libc.so: link build/stdio.o build/stdstr.o build/stdkb.o || root/lib/
+build root/bin/main: link build/main.o || root/bin/
 
 build FORCE: phony
 
 build main: phony root/lib/libc.so root/bin/main fs.json
 build clean: clean | FORCE
+
+build node_modules/.package-lock.json: npm_install package.json package-lock.json
 
 default main
