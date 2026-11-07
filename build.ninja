@@ -32,15 +32,13 @@ rule link
     command = $cc $ldflags $in -o $out
 
 rule clean
-    command = rm -rf build/
-
-build main: phony root/lib/libc.so root/bin/main fs.json
-build clean: clean | FORCE
+    command = rm -rf build/ && $
+    rm -rf root/lib/ && $
+    rm -rf root/bin/
 
 build build/: mkdir
 build root/lib/: mkdir
 build root/bin/: mkdir
-
 
 build fs.json: genfs fs.cocl | FORCE
 
@@ -55,4 +53,7 @@ build root/bin/main: link build/main.o | root/bin/
 
 build FORCE: phony
 
+build main: phony root/lib/libc.so root/bin/main fs.json
+build clean: clean | FORCE
 
+default main

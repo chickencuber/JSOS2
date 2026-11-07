@@ -9,30 +9,14 @@
             "mode": 493,
             "owner": "root",
             "group": "root",
-            "children": {
-                "main": {
-                    "type": "file",
-                    "mode": 365,
-                    "owner": "root",
-                    "group": "root",
-                    "include": "root/bin/main"
-                }
-            }
+            "children": {}
         },
         "lib": {
             "type": "dir",
             "mode": 493,
             "owner": "root",
             "group": "root",
-            "children": {
-                "libc.so": {
-                    "type": "file",
-                    "mode": 493,
-                    "owner": "root",
-                    "group": "root",
-                    "include": "root/lib/libc.so"
-                }
-            }
+            "children": {}
         },
         "headers": {
             "type": "dir",
