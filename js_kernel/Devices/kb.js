@@ -57,6 +57,7 @@ class KeyboardDevice {
             (MOD_META * event.metaKey) |
             (MOD_CAPS * event.getModifierState("CapsLock"))
         );
+        event.preventDefault();
     }
     onKeyUp = event => {
         this.feed(KEY_RELEASED, KEY_CODES[event.code],
@@ -66,6 +67,7 @@ class KeyboardDevice {
             (MOD_META * event.metaKey) |
             (MOD_CAPS * event.getModifierState("CapsLock"))
         );
+        event.preventDefault();
     }
     close() {
         window.removeEventListener("keydown", this.onKeyDown);

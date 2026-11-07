@@ -1,3 +1,4 @@
+#!/bin/node
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { parse } from "@chickencuber/cocl";

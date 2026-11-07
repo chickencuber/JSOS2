@@ -15,38 +15,52 @@ const global = {
 
 class Env {
     async find(varname, file) {
-        if(!this.vars.has(varname)) return "";
-        //I love javascripts new Iterator helpers
-        const iter  = this.vars.get(varname).split(";").values().map(v=>v.trim()).filter(v => v!=="");
-        for(const str of iter) {
+        if (!this.vars.has(varname)) return "";
+
+        const iter = this.vars.get(varname)
+            .split(";")
+            .values()
+            .map(v => v.trim())
+            .filter(v => v !== "");
+
+        for (const str of iter) {
             const children = await FS.readdir(str);
-            if(children.includes(file)) {
+
+            if (children.includes(file)) {
                 const p = PathBuf.parse(str);
                 p.push(file);
                 return p.toString();
             }
         }
+
         return "";
     }
+
     allocateTable(count, alignment) {
-        this.nextTableSlot = (this.nextTableSlot + alignment - 1) & ~(alignment - 1);
+        this.nextTableSlot =
+            (this.nextTableSlot + alignment - 1) & ~(alignment - 1);
 
         const base = this.nextTableSlot;
         this.nextTableSlot += count;
 
         return base;
     }
+
     allocate(size, alignment) {
-        this.nextFree = (this.nextFree + alignment - 1) & ~(alignment - 1);
+        this.nextFree =
+            (this.nextFree + alignment - 1) & ~(alignment - 1);
+
         const base = this.nextFree;
         this.nextFree += size;
 
         return base;
     }
+
     /**
-        * @type {Thread}
-        */
+     * @type {Thread}
+     */
     thread;
+
     constructor() {
         this.mem = new WebAssembly.Memory({
             initial: 16,
@@ -54,15 +68,27 @@ class Env {
             shared: true,
         });
 
-        this.dlinstanceid = new Map; 
-        this.instanceid = []
+        this.dlinstanceid = new Map;
+        this.instanceid = [];
 
         this.cwd = PathBuf.parse("/");
-        /**
-            * @type {Map<string, string>}
-            */
         this.vars = new Map;
+
         this.fd = {
+            handles: [],
+            free: [],
+        };
+
+        /**
+         * @type {{
+         *     handles: Array<{
+         *         env: Env,
+             *     promise: Promise<number>,
+         *     } | null>,
+         *     free: number[]
+         * }}
+         */
+        this.processes = {
             handles: [],
             free: [],
         };
@@ -73,28 +99,57 @@ class Env {
         this.imported_libs = new Map;
         this.dlhandles = {};
         this.dlmem = {};
+
         this.nextFree = 0x10000;
         this.nextTableSlot = 0;
 
         const STACK_TOP = this.mem.buffer.byteLength - 16;
+
         this.stackPointer = Thread.Global(
             { value: "i32", mutable: true },
             STACK_TOP
         );
     }
+
+    /**
+        * @param {Env} env
+        * @param {Promise<number>} promise
+        * @returns {number}
+        */
+    allocateProcess(env, promise) {
+        const pid = this.processes.free.pop()
+            ?? this.processes.handles.length;
+
+        this.processes.handles[pid] = { env, promise };
+
+        return pid;
+    }
+
+    /**
+     * @param {number} pid
+     */
+    freeProcess(pid) {
+        this.processes.handles[pid] = null;
+        this.processes.free.push(pid);
+    }
+
     clone() {
         const env = new Env;
-        env.vars = new Map(this.vars)
+
+        env.vars = new Map(this.vars);
         env.user = this.user;
         env.cwd = this.cwd.clone();
         env.group = this.group;
+
         for (const [i, d] of this.fd.handles.entries()) {
             if (d) {
                 d.dup(env, [i, "fail"]);
             }
         }
+
         return env;
     }
+
     cloneVars() {
         const env = new Env();
         env.vars = new Map(this.vars);

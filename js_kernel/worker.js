@@ -13,6 +13,16 @@ const table = new WebAssembly.Table({
 let nextImportId = 1;
 let nextGlobalId = 1;
 
+
+class ProcessExit extends Error {
+    constructor(status = 0) {
+        super(`Process exited with status ${status}`);
+
+        this.name = "ProcessExit";
+        this.status = status;
+    }
+}
+
 function callImport(instanceId, module, name, args) {
     const id = nextImportId++;
 
@@ -35,11 +45,11 @@ function respond(id, result) {
 }
 
 function fail(id, error) {
-    console.error("Worker request failed:", error);
-
+    const processExit = error instanceof ProcessExit
     self.postMessage({
         id,
-        error: String(error?.message ?? error),
+        processExit,
+        error: processExit ? error.status : String(error?.message ?? error),
     });
 }
 
@@ -52,8 +62,12 @@ self.addEventListener("message", async ({ data }) => {
 
         pendingImports.delete(id);
 
-        if (data.error) {
-            task.reject(new Error(data.error));
+        if (data.error || data.processExit) {
+            if (data.processExit) {
+                task.reject(new ProcessExit(data.error));
+            } else {
+                task.reject(new Error(data.error));
+            }
         } else {
             task.resolve(data.result);
         }
@@ -176,11 +190,14 @@ self.addEventListener("message", async ({ data }) => {
                     );
                 }
 
-                const result = await WebAssembly.promising(fn)(
-                    ...data.args
-                );
-
-                respond(id, result);
+                try {
+                    const result = await WebAssembly.promising(fn)(
+                        ...data.args
+                    );
+                    respond(id, result);
+                } catch (e) {
+                    throw e;
+                }
                 break;
             }
 

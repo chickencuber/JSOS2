@@ -17,8 +17,12 @@ class Thread {
 
             this.pending.delete(data.id);
 
-            if (data.error) {
-                task.reject(new Error(data.error));
+            if (data.error || data.processExit) {
+                if (data.processExit) {
+                    task.reject(new ProcessExit(data.error));
+                } else {
+                    task.reject(new Error(data.error));
+                }
             } else {
                 task.resolve(data.result);
             }
@@ -70,10 +74,12 @@ class Thread {
                 result,
             });
         } catch (error) {
+            const processExit = error instanceof ProcessExit;
             this.worker.postMessage({
                 type: "import-result",
                 id: data.id,
-                error: String(error?.message ?? error),
+                processExit,
+                error: processExit ? error.status : String(error?.message ?? error),
             });
         }
     }
@@ -198,6 +204,6 @@ class Thread {
 
 function create_thread() {
     return new Thread(
-        new Worker("./js_kernel/worker.js")
+        new Worker("./js_kernel/worker.js?v=" + Date.now())
     );
 };

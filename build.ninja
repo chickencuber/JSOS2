@@ -1,0 +1,58 @@
+cc = clang
+cflags = --target=wasm32 $
+		  -fPIC $
+		  -Iheaders $
+		  -ffreestanding $
+		  -nostdlib $
+		  -nostdinc $
+		  -MMD -MP $
+          -matomics $
+          -mbulk-memory
+
+ldflags = --target=wasm32 $
+           -nostdlib $
+           -Wl,--no-entry $
+           -Wl,--export-all $
+           -Wl,--shared $
+		   -Xlinker --import-memory=env,mem $
+           -Wl,--shared-memory $
+           -Wl,--max-memory=16777216
+
+rule mkdir
+    command = mkdir -p $out
+
+rule cc
+    depfile = $out.d
+    command = $cc $cflags -c $in -o $out
+
+rule genfs
+    command = ./generate.js $in $out
+
+rule link
+    command = $cc $ldflags $in -o $out
+
+rule clean
+    command = rm -rf build/
+
+
+build build/: mkdir
+build root/lib/: mkdir
+build root/bin/: mkdir
+
+
+build fs.json: genfs fs.cocl | FORCE
+
+build build/stdio.o: cc src/libc/stdio.c | build/
+build build/stdstr.o: cc src/libc/stdstr.c | build/ 
+build build/stdkb.o: cc src/libc/stdkb.c | build/
+build build/main.o: link src/main.c | build/
+
+
+build root/lib/libc.so: link build/stdio.o build/stdstr.o build/stdkb.o | root/lib/
+build root/bin/main: link build/main.o | root/bin/
+
+build FORCE: phony
+build clean: clean | FORCE
+
+build main: phony root/lib/libc.so root/bin/main fs.json
+

@@ -3,8 +3,8 @@
 #include <stdstr.h>
 #include <stdlib.h>
 
-int main() {
-    int fd = open("/dev/kb");
+int main(int argc, char** argv) {
+    int fd = open("/dev/kb", O_RDONLY, 0);
     loop {
         KeyEvent event;
         int r = read(fd, &event, 3); // one key at a time
