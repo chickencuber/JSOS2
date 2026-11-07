@@ -12,7 +12,7 @@
             "children": {
                 "main": {
                     "type": "file",
-                    "mode": 365,
+                    "mode": 493,
                     "owner": "root",
                     "group": "root",
                     "include": "root/bin/main"
