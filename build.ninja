@@ -45,7 +45,7 @@ build build/: mkdir
 build root/lib/: mkdir
 build root/bin/: mkdir
 
-build fs.json: genfs fs.cocl | FORCE | node_modules/.package-lock.json
+build fs.json: genfs fs.cocl | FORCE || node_modules/.package-lock.json
 
 build build/stdio.o: cc src/libc/stdio.c || build/
 build build/stdstr.o: cc src/libc/stdstr.c || build/ 
