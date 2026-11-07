@@ -45,7 +45,7 @@ build fs.json: genfs fs.cocl | FORCE
 build build/stdio.o: cc src/libc/stdio.c | build/
 build build/stdstr.o: cc src/libc/stdstr.c | build/ 
 build build/stdkb.o: cc src/libc/stdkb.c | build/
-build build/main.o: link src/main.c | build/
+build build/main.o: cc src/main.c | build/
 
 
 build root/lib/libc.so: link build/stdio.o build/stdstr.o build/stdkb.o | root/lib/
