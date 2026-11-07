@@ -5,7 +5,7 @@ mod /bin/**f root root 755
 mod /lib/**f root root 755
 
 mkdir /dev/
-mod /bin/**f root root 555
+mod /dev/**f root root 555
 
 mkdir /usr/
 mkdir /usr/lib/
