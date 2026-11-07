@@ -34,6 +34,8 @@ rule link
 rule clean
     command = rm -rf build/
 
+build main: phony root/lib/libc.so root/bin/main fs.json
+build clean: clean | FORCE
 
 build build/: mkdir
 build root/lib/: mkdir
@@ -52,7 +54,5 @@ build root/lib/libc.so: link build/stdio.o build/stdstr.o build/stdkb.o | root/l
 build root/bin/main: link build/main.o | root/bin/
 
 build FORCE: phony
-build clean: clean | FORCE
 
-build main: phony root/lib/libc.so root/bin/main fs.json
 
